@@ -1,7 +1,7 @@
 # Nuke built-in rules and variables.
 override MAKEFLAGS += -rR
 
-override IMAGE_NAME := freeos
+override IMAGE_NAME := flos
 
 # Convenience macro to reliably declare user overridable variables.
 define DEFAULT_VAR =
