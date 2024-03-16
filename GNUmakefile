@@ -54,20 +54,11 @@ ovmf:
 	mkdir -p ovmf
 	cd ovmf && curl -Lo OVMF.fd https://retrage.github.io/edk2-nightly/bin/RELEASEX64_OVMF.fd
 
-limine:
-	git clone https://github.com/limine-bootloader/limine.git --branch=v7.x-binary --depth=1
-	$(MAKE) -C limine \
-		CC="$(HOST_CC)" \
-		CFLAGS="$(HOST_CFLAGS)" \
-		CPPFLAGS="$(HOST_CPPFLAGS)" \
-		LDFLAGS="$(HOST_LDFLAGS)" \
-		LIBS="$(HOST_LIBS)"
-
 .PHONY: kernel
 kernel:
 	cd kernel && zig build $(ZIGFLAGS)
 
-$(IMAGE_NAME).iso: limine kernel
+$(IMAGE_NAME).iso: kernel
 	rm -rf iso_root
 	mkdir -p iso_root/boot
 	cp -v kernel/zig-out/bin/kernel iso_root/boot/
@@ -84,7 +75,7 @@ $(IMAGE_NAME).iso: limine kernel
 	limine bios-install $(IMAGE_NAME).iso
 	rm -rf iso_root
 
-$(IMAGE_NAME).hdd: limine kernel
+$(IMAGE_NAME).hdd: kernel
 	rm -f $(IMAGE_NAME).hdd
 	dd if=/dev/zero bs=1M count=0 seek=64 of=$(IMAGE_NAME).hdd
 	sgdisk $(IMAGE_NAME).hdd -n 1:2048 -t 1:ef00
