@@ -2,3 +2,4 @@ kernel/zig-cache
 kernel/zig-out
 /limine
 flos.iso
+font.bdf
